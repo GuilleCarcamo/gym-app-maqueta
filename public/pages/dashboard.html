@@ -2,77 +2,226 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - GymApp</title>
+  
+  <!-- Bootstrap 5 + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Estilos responsive de la app -->
+  <link href="./css/responsive.css" rel="stylesheet">
+  
+  <style>
+    /* Estilos específicos del dashboard */
+    .welcome-card {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: white;
+      border: none;
+    }
+    .stat-card {
+      transition: transform 0.2s;
+    }
+    @media (hover: hover) {
+      .stat-card:hover { transform: translateY(-4px); }
+    }
+    .menu-card {
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12) !important;
+      color: inherit;
+    }
+    .menu-card i { font-size: 2rem; margin-bottom: 0.5rem; }
+    .menu-card.small i { font-size: 1.5rem; }
+    .menu-card.small { min-height: 90px; }
+  </style>
 </head>
-
 <body class="bg-light">
 
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand">Gym App</span>
-    <button id="logoutBtn" class="btn btn-danger">Salir</button>
+  <!-- Desktop Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm d-none d-lg-block">
+    <div class="container px-0">
+      <a class="navbar-brand fw-bold" href="#"><i class="bi bi-barbell me-2"></i>GymApp</a>
+      <div class="collapse navbar-collapse show">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="rutinas.html"><i class="bi bi-list-task me-1"></i> Rutinas</a></li>
+          <li class="nav-item"><a class="nav-link" href="turnos.html"><i class="bi bi-calendar-check me-1"></i> Turnos</a></li>
+          <li class="nav-item"><a class="nav-link" href="cliente.html"><i class="bi bi-person me-1"></i> Perfil</a></li>
+          <li class="nav-item ms-lg-3">
+            <button id="logoutBtn" class="btn btn-outline-light btn-sm">
+              <i class="bi bi-box-arrow-right me-1"></i> Salir
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <!-- CONTENIDO -->
-  <div class="container mt-4">
-    <h1 class="mb-4">Dashboard 💪</h1>
+  <!-- Mobile Header -->
+  <header class="bg-primary text-white py-3 d-lg-none sticky-top shadow-sm">
+    <div class="d-flex justify-content-between align-items-center px-3">
+      <h1 class="fs-5 fw-bold mb-0"><i class="bi bi-barbell me-2"></i>GymApp</h1>
+      <button id="logoutBtn" class="btn btn-sm btn-outline-light border-0">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </div>
+  </header>
 
-    <!-- MENÚ DINÁMICO -->
-    <div id="menu" class="row"></div>
-  </div>
+  <main class="container px-3 px-lg-0 py-3 pb-lg-5">
+    
+    <!-- Welcome Card -->
+    <div class="card welcome-card shadow-sm rounded-3 mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center">
+          <img src="https://ui-avatars.com/api/?name=Usuario&size=64&background=ffffff&color=0d6efd" 
+               alt="Avatar" class="rounded-circle border border-2 border-white me-3">
+          <div>
+            <h4 class="fw-bold mb-1" id="welcomeName">¡Bienvenido!</h4>
+            <p class="mb-0 opacity-75" id="welcomeRole">Cargando perfil...</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <!-- SCRIPT -->
+    <!-- Stats Row (Placeholder para futura integración con Firestore) -->
+    <div class="row g-2 mb-4 d-none d-lg-flex">
+      <div class="col-4">
+        <div class="card stat-card border-0 shadow-sm rounded-3 text-center py-3">
+          <i class="bi bi-calendar-check fs-4 text-primary"></i>
+          <div class="fw-bold fs-5 mt-1" id="statTurnos">-</div>
+          <small class="text-muted">Turnos</small>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card stat-card border-0 shadow-sm rounded-3 text-center py-3">
+          <i class="bi bi-dumbbell fs-4 text-success"></i>
+          <div class="fw-bold fs-5 mt-1" id="statRutinas">-</div>
+          <small class="text-muted">Rutinas</small>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card stat-card border-0 shadow-sm rounded-3 text-center py-3">
+          <i class="bi bi-fire fs-4 text-warning"></i>
+          <div class="fw-bold fs-5 mt-1" id="statProgreso">-</div>
+          <small class="text-muted">Progreso</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú Dinámico por Rol -->
+    <h5 class="fw-bold mb-3" id="menuTitle">Accesos rápidos</h5>
+    <div class="row g-3" id="menu">
+      <!-- Se renderiza con JS según el rol -->
+    </div>
+
+    <!-- Sección de novedades / anuncios (opcional) -->
+    <div class="card border-0 shadow-sm rounded-3 mt-4">
+      <div class="card-header bg-white border-0 py-3">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-megaphone me-2 text-primary"></i>Novedades</h6>
+      </div>
+      <div class="card-body py-3">
+        <p class="text-muted small mb-0">
+          <i class="bi bi-info-circle me-1"></i>
+          Próximamente: integración con pagos online y seguimiento de progreso en tiempo real.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="fixed-bottom bg-white border-top d-lg-none d-flex justify-content-around py-2 pb-3 shadow-lg">
+    <a href="rutinas.html" class="nav-link text-center text-decoration-none text-muted">
+      <i class="bi bi-list-task fs-5"></i><small>Rutinas</small>
+    </a>
+    <a href="turnos.html" class="nav-link text-center text-decoration-none text-muted">
+      <i class="bi bi-calendar-check fs-5"></i><small>Turnos</small>
+    </a>
+    <a href="cliente.html" class="nav-link text-center text-decoration-none active-nav">
+      <i class="bi bi-person fs-5"></i><small>Perfil</small>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module">
     import { requireAuth } from '../js/guards.js';
     import { logout, getUser } from '../js/auth.js';
 
-    // 🔒 proteger acceso
+    // 🔒 Proteger acceso
     requireAuth();
 
-    // 👤 obtener usuario
+    // 👤 Obtener usuario y personalizar UI
     const user = getUser();
-    const menu = document.getElementById("menu");
+    
+    // Welcome message
+    const nombre = user?.nombre || user?.username || 'Usuario';
+    const rol = user?.role === 'admin' ? 'Administrador' : 'Miembro';
+    document.getElementById('welcomeName').textContent = `¡Hola, ${nombre}!`;
+    document.getElementById('welcomeRole').textContent = rol;
 
+    // Stats placeholder (se llenarán con Firestore luego)
+    if (user?.role === 'cliente') {
+      document.getElementById('statTurnos').textContent = '3';
+      document.getElementById('statRutinas').textContent = '5';
+      document.getElementById('statProgreso').textContent = '78%';
+    }
+
+    // 🎯 Configuración del menú por rol
+    const menu = document.getElementById("menu");
     let opciones = [];
 
-    // 👑 ADMIN
-    if (user.role === "admin") {
+    if (user?.role === "admin") {
+      document.getElementById('menuTitle').textContent = 'Panel de Administración';
       opciones = [
-        { nombre: "Rutinas", link: "rutinas.html", color: "primary" },
-        { nombre: "Turnos", link: "turnos.html", color: "success" },
-        { nombre: "Pagos", link: "pagos.html", color: "warning" },
-        { nombre: "Clientes", link: "cliente.html", color: "info" },
-        { nombre: "Tienda", link: "tienda.html", color: "secondary" }
+        { nombre: "Rutinas", link: "rutinas.html", icon: "bi-list-task", color: "primary", desc: "Gestionar planes" },
+        { nombre: "Turnos", link: "turnos.html", icon: "bi-calendar-check", color: "success", desc: "Reservas y horarios" },
+        { nombre: "Pagos", link: "pagos.html", icon: "bi-credit-card", color: "warning", desc: "Control financiero" },
+        { nombre: "Clientes", link: "cliente.html", icon: "bi-people", color: "info", desc: "Gestión de usuarios" },
+        { nombre: "Tienda", link: "tienda.html", icon: "bi-bag", color: "secondary", desc: "Productos y stock" }
       ];
     }
 
-    // 🙋 CLIENTE
-    if (user.role === "cliente") {
+    if (user?.role === "cliente") {
+      document.getElementById('menuTitle').textContent = 'Mi Espacio';
       opciones = [
-        { nombre: "Mis Rutinas", link: "rutinas.html", color: "primary" },
-        { nombre: "Mis Turnos", link: "turnos.html", color: "success" }
+        { nombre: "Mis Rutinas", link: "rutinas.html", icon: "bi-dumbbell", color: "primary", desc: "Ver y seguir planes", small: true },
+        { nombre: "Mis Turnos", link: "turnos.html", icon: "bi-calendar-event", color: "success", desc: "Reservar y gestionar", small: true },
+        { nombre: "Mi Perfil", link: "cliente.html", icon: "bi-person-gear", color: "info", desc: "Datos y configuración", small: true }
       ];
     }
 
-    // 🎯 renderizar botones
+    // 🎨 Renderizar cards del menú
     opciones.forEach(op => {
+      const sizeClass = op.small ? 'small' : '';
       menu.innerHTML += `
-        <div class="col-md-4 mb-3">
-          <a href="${op.link}" class="btn btn-${op.color} w-100">
-            ${op.nombre}
+        <div class="col-6 col-md-4 col-lg-3">
+          <a href="${op.link}" class="card menu-card ${sizeClass} border-0 shadow-sm rounded-3 text-decoration-none text-dark bg-white">
+            <i class="bi ${op.icon} text-${op.color}"></i>
+            <h6 class="fw-bold mb-0">${op.nombre}</h6>
+            ${op.desc ? `<small class="text-muted d-none d-md-block">${op.desc}</small>` : ''}
           </a>
         </div>
       `;
     });
 
-    // 🚪 logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
+    // 🚪 Logout
+    document.getElementById("logoutBtn").addEventListener("click", (e) => {
+      e.preventDefault();
       logout();
       window.location.href = "../login.html";
     });
   </script>
-
 </body>
 </html>
