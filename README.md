@@ -1,7 +1,4 @@
 # Gym App Maqueta
-
-Maqueta funcional para presentar a un cliente en la primera entrevista.
-
 ## Tecnologías
 - HTML
 - CSS
