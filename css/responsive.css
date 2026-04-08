@@ -1,0 +1,61 @@
+/* =========================================
+   BASE (Mobile First)
+   ========================================= */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Espacio para bottom nav en móvil */
+@media (max-width: 991.98px) {
+  body { padding-bottom: 80px; }
+  
+  /* Targets táctiles mínimos (solo en móvil/tablet) */
+  .btn, .form-control, .form-select, .list-group-item, .nav-link {
+    min-height: 44px;
+  }
+  .btn-sm, .form-control-sm, .form-select-sm {
+    min-height: 38px;
+  }
+  
+  /* Scroll horizontal suave para filtros */
+  .scroll-x {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-x::-webkit-scrollbar { display: none; }
+}
+
+/* =========================================
+   DESKTOP (≥ 992px)
+   ========================================= */
+@media (min-width: 992px) {
+  body { padding-bottom: 0; }
+  .container { max-width: 1140px; }
+  
+  /* Botones con tamaño estándar de escritorio */
+  .btn { padding: 0.5rem 1rem; }
+  
+  /* Hover effects solo en dispositivos con mouse */
+  @media (hover: hover) {
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12) !important;
+      transition: all 0.2s ease;
+    }
+    .nav-link:hover { opacity: 0.85; }
+  }
+}
+
+/* =========================================
+   UTILIDADES
+   ========================================= */
+.border-dashed { border: 2px dashed #dee2e6 !important; }
+.active-nav { color: #0d6efd !important; font-weight: 600; }
+.active-nav small { font-weight: 600; }
+
+/* Safe area para iPhone */
+@supports (padding: max(0px)) {
+  .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+}
